@@ -5,16 +5,62 @@ import Image from "next/image"
 
 import { cn } from "@/lib/utils"
 
-import { createChessBoard } from "../board"
+import { createChessBoard } from "../components/board"
 import {
-  blackPieces,
+  Bishop,
+  King,
+  Knight,
   moveTranslator,
+  Pawn,
   PieceSide,
-  whitePieces,
+  Queen,
+  Rook,
   type ChessPiece,
   type PieceName,
   type PiecePosition,
-} from "../pieces"
+} from "../components/pieces"
+
+// Example usage
+export const blackPieces = [
+  new Rook(PieceSide.black, { x: 0, y: 7 }),
+  new Knight(PieceSide.black, { x: 0, y: 6 }),
+  new Bishop(PieceSide.black, { x: 0, y: 5 }),
+  new King(PieceSide.black, { x: 0, y: 4 }),
+  new Queen(PieceSide.black, { x: 0, y: 3 }),
+  new Bishop(PieceSide.black, { x: 0, y: 2 }),
+  new Knight(PieceSide.black, { x: 0, y: 1 }),
+  new Rook(PieceSide.black, { x: 0, y: 0 }),
+
+  new Pawn(PieceSide.black, { x: 1, y: 0 }),
+  new Pawn(PieceSide.black, { x: 1, y: 1 }),
+  new Pawn(PieceSide.black, { x: 1, y: 2 }),
+  new Pawn(PieceSide.black, { x: 1, y: 3 }),
+  new Pawn(PieceSide.black, { x: 1, y: 4 }),
+  new Pawn(PieceSide.black, { x: 1, y: 5 }),
+  new Pawn(PieceSide.black, { x: 1, y: 6 }),
+  new Pawn(PieceSide.black, { x: 1, y: 7 }),
+]
+
+// Example usage
+export const whitePieces = [
+  new Rook(PieceSide.white, { x: 7, y: 7 }),
+  new Knight(PieceSide.white, { x: 7, y: 6 }),
+  new Bishop(PieceSide.white, { x: 7, y: 5 }),
+  new King(PieceSide.white, { x: 7, y: 4 }),
+  new Queen(PieceSide.white, { x: 7, y: 3 }),
+  new Bishop(PieceSide.white, { x: 7, y: 2 }),
+  new Knight(PieceSide.white, { x: 7, y: 1 }),
+  new Rook(PieceSide.white, { x: 7, y: 0 }),
+
+  new Pawn(PieceSide.white, { x: 6, y: 0 }),
+  new Pawn(PieceSide.white, { x: 6, y: 1 }),
+  new Pawn(PieceSide.white, { x: 6, y: 2 }),
+  new Pawn(PieceSide.white, { x: 6, y: 3 }),
+  new Pawn(PieceSide.white, { x: 6, y: 4 }),
+  new Pawn(PieceSide.white, { x: 6, y: 5 }),
+  new Pawn(PieceSide.white, { x: 6, y: 6 }),
+  new Pawn(PieceSide.white, { x: 6, y: 7 }),
+]
 
 export function ChessBoard() {
   const chessBoard = createChessBoard()
@@ -47,7 +93,7 @@ export function ChessBoard() {
           .length > 0
       ) {
         chessBoard[position.x][position.y].piece?.delete()
-        selectedPiece.move(position)
+        selectedPiece.move(position, [...blackPieces, ...whitePieces])
         setTurn(
           selectedPiece.side === PieceSide.white
             ? PieceSide.black
@@ -93,7 +139,7 @@ export function ChessBoard() {
               id={`(${x},${y})`}
               data-color={cellColor}
               className={cn(
-                "relative flex size-20 shrink-0 border",
+                "relative flex size-12 shrink-0 border md:size-16 lg:size-20",
                 cellColor,
                 k.piece && "cursor-pointer",
                 selectedPiece &&
@@ -107,7 +153,7 @@ export function ChessBoard() {
               {k.piece && (
                 <Image
                   src={k.piece.icon}
-                  alt=""
+                  alt={k.piece.name}
                   height={50}
                   width={50}
                   className="m-auto"

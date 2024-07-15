@@ -28,6 +28,8 @@ export class ChessPiece {
   name: PieceName
   side: PieceSide
   position: PiecePosition
+  hasMoved: boolean
+  inCheck: boolean
   allowed: {
     up: PiecePosition[]
     down: PiecePosition[]
@@ -44,6 +46,8 @@ export class ChessPiece {
   constructor(side: PieceSide, position: PiecePosition) {
     this.side = side
     this.position = position
+    this.hasMoved = false
+    this.inCheck = false
     this.allowed = {
       up: [],
       down: [],
@@ -57,8 +61,39 @@ export class ChessPiece {
     }
   }
 
-  move(newPosition: PiecePosition) {
+  move(newPosition: PiecePosition, board: ChessPiece[]) {
     this.position = newPosition
+    this.hasMoved = true
+    const newPossibleMoves = this.getPossibleMoves(board)
+
+    newPossibleMoves.forEach((move) => {
+      if (
+        board.find(
+          (piece) =>
+            piece.name === PieceName.king &&
+            piece.position.x === move.x &&
+            piece.position.y === move.y &&
+            piece.side !== this.side
+        )
+      ) {
+        this.inCheck = true
+        toast({
+          title: "Check!",
+          variant: "destructive",
+        })
+
+        board.forEach((piece) => {
+          if (
+            piece.side !== this.side &&
+            piece
+              .getPossibleMoves(board)
+              .find((pos) => pos.x === newPosition.x && pos.y === newPosition.y)
+          ) {
+            console.log("saveable")
+          }
+        })
+      }
+    })
   }
 
   getPosition(): PiecePosition {
@@ -236,6 +271,49 @@ export class ChessPiece {
         }
 
         if (this.name === PieceName.pawn) {
+          if (this.side === PieceSide.black) {
+            if (
+              board.find(
+                (piece) =>
+                  piece.position.x === this.position.x + 1 &&
+                  piece.position.y === this.position.y + 1 &&
+                  piece.side !== this.side
+              )
+            ) {
+              moves.push({ x: this.position.x + 1, y: this.position.y + 1 })
+            }
+            if (
+              board.find(
+                (piece) =>
+                  piece.position.x === this.position.x + 1 &&
+                  piece.position.y === this.position.y - 1 &&
+                  piece.side !== this.side
+              )
+            ) {
+              moves.push({ x: this.position.x + 1, y: this.position.y - 1 })
+            }
+          } else {
+            if (
+              board.find(
+                (piece) =>
+                  piece.position.x === this.position.x - 1 &&
+                  piece.position.y === this.position.y + 1 &&
+                  piece.side !== this.side
+              )
+            ) {
+              moves.push({ x: this.position.x - 1, y: this.position.y + 1 })
+            }
+            if (
+              board.find(
+                (piece) =>
+                  piece.position.x === this.position.x - 1 &&
+                  piece.position.y === this.position.y - 1 &&
+                  piece.side !== this.side
+              )
+            ) {
+              moves.push({ x: this.position.x - 1, y: this.position.y - 1 })
+            }
+          }
           if (occupyingPiece) break
           if (this.side === PieceSide.black && this.position.x > 1) return moves
           else if (this.side === PieceSide.white && this.position.x < 6)
@@ -569,45 +647,3 @@ export class Pawn extends ChessPiece {
 }
 
 export type AllPieceType = Rook | Knight | Bishop | King | Queen
-
-// Example usage
-export const blackPieces = [
-  new Rook(PieceSide.black, { x: 0, y: 7 }),
-  new Knight(PieceSide.black, { x: 0, y: 6 }),
-  new Bishop(PieceSide.black, { x: 0, y: 5 }),
-  new King(PieceSide.black, { x: 0, y: 4 }),
-  new Queen(PieceSide.black, { x: 0, y: 3 }),
-  new Bishop(PieceSide.black, { x: 0, y: 2 }),
-  new Knight(PieceSide.black, { x: 0, y: 1 }),
-  new Rook(PieceSide.black, { x: 0, y: 0 }),
-
-  new Pawn(PieceSide.black, { x: 1, y: 0 }),
-  new Pawn(PieceSide.black, { x: 1, y: 1 }),
-  new Pawn(PieceSide.black, { x: 1, y: 2 }),
-  new Pawn(PieceSide.black, { x: 1, y: 3 }),
-  new Pawn(PieceSide.black, { x: 1, y: 4 }),
-  new Pawn(PieceSide.black, { x: 1, y: 5 }),
-  new Pawn(PieceSide.black, { x: 1, y: 6 }),
-  new Pawn(PieceSide.black, { x: 1, y: 7 }),
-]
-
-// Example usage
-export const whitePieces = [
-  new Rook(PieceSide.white, { x: 7, y: 7 }),
-  new Knight(PieceSide.white, { x: 7, y: 6 }),
-  new Bishop(PieceSide.white, { x: 7, y: 5 }),
-  new King(PieceSide.white, { x: 7, y: 4 }),
-  new Queen(PieceSide.white, { x: 7, y: 3 }),
-  new Bishop(PieceSide.white, { x: 7, y: 2 }),
-  new Knight(PieceSide.white, { x: 7, y: 1 }),
-  new Rook(PieceSide.white, { x: 7, y: 0 }),
-
-  new Pawn(PieceSide.white, { x: 6, y: 0 }),
-  new Pawn(PieceSide.white, { x: 6, y: 1 }),
-  new Pawn(PieceSide.white, { x: 6, y: 2 }),
-  new Pawn(PieceSide.white, { x: 6, y: 3 }),
-  new Pawn(PieceSide.white, { x: 6, y: 4 }),
-  new Pawn(PieceSide.white, { x: 6, y: 5 }),
-  new Pawn(PieceSide.white, { x: 6, y: 6 }),
-  new Pawn(PieceSide.white, { x: 6, y: 7 }),
-]
