@@ -12,11 +12,11 @@ import {
   Knight,
   moveTranslator,
   Pawn,
+  PieceName,
   PieceSide,
   Queen,
   Rook,
   type ChessPiece,
-  type PieceName,
   type PiecePosition,
 } from "../components/pieces"
 
@@ -105,8 +105,18 @@ export function ChessBoard() {
         ])
       }
       setHighlighted([])
+      if (selectedPiece?.name === PieceName.pawn) upgradePawn(selectedPiece)
       setSelectedPiece(null)
-      console.log(movesLog)
+    }
+  }
+
+  function upgradePawn(pawn: ChessPiece) {
+    if (pawn.position.x === 7 || pawn.position.x === 0) {
+      chessBoard[pawn.position.x][pawn.position.y].piece = new Queen(
+        pawn.side,
+        pawn.position
+      )
+      pawn?.delete()
     }
   }
 
@@ -160,7 +170,7 @@ export function ChessBoard() {
                 />
               )}
               <span className="absolute bottom-0 left-1 text-sm opacity-50">
-                {moveTranslator({ x, y })}
+                {JSON.stringify({ x, y })}
               </span>
             </div>
           )

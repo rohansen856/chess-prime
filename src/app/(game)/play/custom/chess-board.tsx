@@ -12,11 +12,11 @@ import {
   Knight,
   moveTranslator,
   Pawn,
+  PieceName,
   PieceSide,
   Queen,
   Rook,
   type ChessPiece,
-  type PieceName,
   type PiecePosition,
 } from "../components/pieces"
 

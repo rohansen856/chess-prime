@@ -14,7 +14,8 @@
     "lint": "next lint",
     "preview": "next build && next start",
     "postinstall": "prisma generate",
-    "db:prepare": "drizzle-kit push:pg"
+    "db:prepare": "drizzle-kit push:pg",
+    "prepare": "husky"
   },
   "dependencies": {
     "@editorjs/code": "^2.9.0",

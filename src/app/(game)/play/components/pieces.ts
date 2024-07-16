@@ -270,6 +270,8 @@ export class ChessPiece {
           moves.push({ x: newX, y: newY })
         }
 
+        if (occupyingPiece && this.name === PieceName.pawn) moves.pop()
+
         if (this.name === PieceName.pawn) {
           if (this.side === PieceSide.black) {
             if (
