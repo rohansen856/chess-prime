@@ -1,13 +1,13 @@
 import { SiteConfig } from "@/types"
 
 export const siteConfig: SiteConfig = {
-  name: "rcsen-next-template",
+  name: "chess-prime",
   description:
     "An open source application built using the new router, server components and everything new in Next.js 13.",
-  url: "https://tx.rcsen-next-template.com",
-  ogImage: "https://tx.rcsen-next-template.com/og.jpg",
+  url: "https://tx.chess-prime.com",
+  ogImage: "https://tx.chess-prime.com/og.jpg",
   links: {
-    twitter: "https://twitter.com/rcsen-next-template",
-    github: "https://github.com/rcsen-next-template/rcsen-next-template",
+    twitter: "https://twitter.com/chess-prime",
+    github: "https://github.com/chess-prime/chess-prime",
   },
 }
